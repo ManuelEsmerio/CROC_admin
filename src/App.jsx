@@ -1,34 +1,32 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// import Dashboard from "./pages/Dashboard"
+import { useMemo } from "react";
+import { useSelector } from "react-redux";
+
+// Material UI Components
+import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+
+// Router
+import AppRoute from "./routes/routes"
+
+// Theme
+import { getDesignTokens } from "./themes/CustomTheme";
+
+// SnackBar
+import { SnackbarProvider } from "notistack";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const selectMode = useSelector((state) => state.theme.mode);
+
+  // Update the theme only if the mode changes
+  const theme = useMemo(() => createTheme(getDesignTokens(selectMode)), [selectMode]);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <ThemeProvider theme={theme}>
+      <SnackbarProvider maxSnack={2} autoHideDuration={1000}>
+        <CssBaseline />
+        <AppRoute />
+      </SnackbarProvider>
+    </ThemeProvider>
   )
 }
 
